@@ -1,0 +1,68 @@
+.calendario {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1rem;
+  margin: 0 1rem;
+
+  @media screen and (max-width: 1025px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media screen and (max-width: 550px) {
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  .card {
+    border-radius: 10px;
+    color: white;
+    text-align: center;
+
+    h2 {
+      font-size: 1.5rem;
+      margin: 0;
+    }
+
+    .content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: black;
+      padding: 0.5rem 0.2rem;
+
+      p {
+        text-align: center;
+        margin: 0 0 0.5rem 0;
+        padding: 0.5rem 1rem;
+        color: white;
+        background-color: rgb(152, 123, 255);
+        border-radius: 20rem;
+        border: 1px solid rgb(127, 91, 255);
+        width: 100%;
+      }
+    }
+  }
+
+  .card.current {
+    h2 {
+      background-color: rgb(127, 91, 255) !important;
+    }
+    cursor: pointer;
+    transform: scale(1);
+    transition: all 0.3s;
+    border: 3px solid rgb(127, 91, 255);
+  }
+
+  .card.current:hover {
+    transform: scale(1.1);
+    transition: all 0.3s;
+  }
+
+  .card.prev {
+    h2 {
+      background-color: rgb(96, 85, 135) !important;
+    }
+    cursor: not-allowed;
+    border: 3px solid rgb(96, 85, 135);
+  }
+}
