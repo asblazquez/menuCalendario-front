@@ -2,38 +2,45 @@ import { useEffect, useState } from 'react'
 import { calendario, day } from '../../interfaces/calendario'
 import Card from './card'
 import '../../styles/calendario.scss'
+import { FaArrowAltCircleRight } from 'react-icons/fa'
+import { FaArrowAltCircleLeft } from 'react-icons/fa'
 
 export default function Calendario(props: calendario) {
   const { date } = props
   const [lDays, setLDays] = useState<day[]>([])
+  const [currentDate, setCurrentDate] = useState(date)
 
   useEffect(() => {
     getDays()
-  }, [date])
+  }, [currentDate])
 
   const getDays = () => {
-    const nDays = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate()
-    const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1)
+    const nDays = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate()
+    const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1)
     const firstDayIndex = firstDayOfMonth.getDay()
 
     const days: day[] = []
     const daysPrevMonth = firstDayIndex === 0 ? 6 : firstDayIndex - 1
 
     if (firstDayIndex !== 1) {
-      const prevMonth = date.getMonth() - 1
-      const prevYear = prevMonth < 0 ? date.getFullYear() - 1 : date.getFullYear()
-      const prevMonthDays = new Date(prevYear, prevMonth + 1, 0).getDate()
+      var lastDayPrevMonth =
+        new Date(currentDate.getFullYear(), currentDate.getMonth(), 0).getDate() - daysPrevMonth + 1
 
-      Array.from({ length: daysPrevMonth }, (_, i) => {
-        const day = prevMonthDays - daysPrevMonth + i + 1
+      const prevMonth = currentDate.getMonth() === 0 ? 11 : currentDate.getMonth() - 1
+      const prevYear =
+        currentDate.getMonth() === 0 ? currentDate.getFullYear() - 1 : currentDate.getFullYear()
+
+      Array.from({ length: daysPrevMonth }, (_) => {
+        const day = lastDayPrevMonth
         days.push({ date: new Date(prevYear, prevMonth, day), isCurrentMonth: false })
+        lastDayPrevMonth++
       })
     }
 
     Array.from({ length: nDays }, (_, i) => {
       const day = i + 1
-      const month = date.getMonth() + 1
-      const year = date.getFullYear()
+      const month = currentDate.getMonth() + 1
+      const year = currentDate.getFullYear()
       days.push({
         date: new Date(`${year}-${month}-${day}`),
         isCurrentMonth: true,
@@ -45,13 +52,40 @@ export default function Calendario(props: calendario) {
     setLDays(days)
   }
 
-  console.log(lDays)
+  const nextMonth = () => {
+    const newDate = new Date(currentDate)
+    newDate.setMonth(currentDate.getMonth() + 1)
+
+    setCurrentDate(newDate)
+  }
+
+  const prevMonth = () => {
+    const newDate = new Date(currentDate)
+    newDate.setMonth(currentDate.getMonth() - 1)
+
+    setCurrentDate(newDate)
+  }
 
   return (
-    <section className="calendario">
-      {lDays.map((day, index) => (
-        <Card key={index} {...day} />
-      ))}
-    </section>
+    <>
+      <h1>{currentDate.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' })}</h1>
+      <div className="calendario">
+        <div className="btnMonth">
+          <button type="button" onClick={() => prevMonth()}>
+            <FaArrowAltCircleLeft />
+          </button>
+        </div>
+        <section className="mainContent">
+          {lDays.map((day, index) => (
+            <Card key={index} {...day} />
+          ))}
+        </section>
+        <div className="btnMonth">
+          <button type="button" onClick={() => nextMonth()}>
+            <FaArrowAltCircleRight />
+          </button>
+        </div>
+      </div>
+    </>
   )
 }
