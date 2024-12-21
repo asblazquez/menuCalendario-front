@@ -4,14 +4,17 @@ import Card from './card'
 import '../../styles/calendario.scss'
 import { FaArrowAltCircleRight } from 'react-icons/fa'
 import { FaArrowAltCircleLeft } from 'react-icons/fa'
+import { EmptyMeal } from '../../Utils/Constants'
 
 export default function Calendario(props: calendario) {
   const { date } = props
   const [lDays, setLDays] = useState<day[]>([])
   const [currentDate, setCurrentDate] = useState(date)
+  const [titelMonth, setTitelMonth] = useState('')
 
   useEffect(() => {
     getDays()
+    renderTitleMonth()
   }, [currentDate])
 
   const getDays = () => {
@@ -32,7 +35,12 @@ export default function Calendario(props: calendario) {
 
       Array.from({ length: daysPrevMonth }, (_) => {
         const day = lastDayPrevMonth
-        days.push({ date: new Date(prevYear, prevMonth, day), isCurrentMonth: false })
+        days.push({
+          date: new Date(prevYear, prevMonth, day),
+          isCurrentMonth: false,
+          comida: EmptyMeal,
+          cena: EmptyMeal
+        })
         lastDayPrevMonth++
       })
     }
@@ -66,9 +74,15 @@ export default function Calendario(props: calendario) {
     setCurrentDate(newDate)
   }
 
+  const renderTitleMonth = () => {
+    let titel = currentDate.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' })
+    titel = titel.charAt(0).toUpperCase() + titel.slice(1)
+    setTitelMonth(titel)
+  }
+
   return (
     <>
-      <h1>{currentDate.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' })}</h1>
+      <h1 className="titleMonth">{titelMonth}</h1>
       <div className="calendario">
         <div className="btnMonth">
           <button type="button" onClick={() => prevMonth()}>

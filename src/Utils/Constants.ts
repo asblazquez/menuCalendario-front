@@ -22,3 +22,5 @@ export const EnumMonths = {
   NOVEMBER: 10,
   DECEMBER: 11
 }
+
+export const EmptyMeal = '____________'
