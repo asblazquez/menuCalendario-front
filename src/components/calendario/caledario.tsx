@@ -5,6 +5,7 @@ import '../../styles/calendario.scss'
 import { FaArrowAltCircleRight } from 'react-icons/fa'
 import { FaArrowAltCircleLeft } from 'react-icons/fa'
 import { EmptyMeal } from '../../Utils/Constants'
+import { MenuService } from '../../services/menuService'
 
 export default function Calendario(props: calendario) {
   const { date } = props
@@ -16,6 +17,20 @@ export default function Calendario(props: calendario) {
     getDays()
     renderTitleMonth()
   }, [currentDate])
+
+  useEffect(() => {
+    if (lDays.length > 0) getDaysData()
+  }, [lDays])
+
+  const getDaysData = async () => {
+    const params = {
+      startDate: lDays[0].date,
+      endDate: lDays[lDays.length - 1].date
+    }
+
+    const days = await MenuService.getDaysByPeriod(params)
+    console.log(days)
+  }
 
   const getDays = () => {
     const nDays = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate()
