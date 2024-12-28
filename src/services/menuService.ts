@@ -1,7 +1,8 @@
+import { paramsGetDaysByPeriod } from '../interfaces/calendario'
 import baseService from './base/baseService'
 
 export class MenuService {
-  static async getDaysByPeriod(params: object) {
-    return await baseService.get('/GetDaysByPeriod', params)
+  static async getDaysByPeriod(params: paramsGetDaysByPeriod) {
+    return await baseService.get('/Day', params)
   }
 }

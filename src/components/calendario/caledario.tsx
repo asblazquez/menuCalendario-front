@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
-import { calendario, day } from '../../interfaces/calendario'
+import { calendario, day, meal, paramsGetDaysByPeriod } from '../../interfaces/calendario'
 import Card from './card'
 import '../../styles/calendario.scss'
 import { FaArrowAltCircleRight } from 'react-icons/fa'
 import { FaArrowAltCircleLeft } from 'react-icons/fa'
-import { EmptyMeal } from '../../Utils/Constants'
 import { MenuService } from '../../services/menuService'
+import { formatDateToServer, formatStringToDate } from '../../Utils/utils'
 
 export default function Calendario(props: calendario) {
   const { date } = props
@@ -18,24 +18,24 @@ export default function Calendario(props: calendario) {
     renderTitleMonth()
   }, [currentDate])
 
-  useEffect(() => {
-    if (lDays.length > 0) getDaysData()
-  }, [lDays])
-
-  const getDaysData = async () => {
-    const params = {
-      startDate: lDays[0].date,
-      endDate: lDays[lDays.length - 1].date
+  const getDaysData = async (firstDay: Date, lastDay: Date) => {
+    const params: paramsGetDaysByPeriod = {
+      startDate: formatDateToServer(firstDay),
+      endDate: formatDateToServer(lastDay)
     }
 
-    const days = await MenuService.getDaysByPeriod(params)
-    console.log(days)
+    const days = (await MenuService.getDaysByPeriod(params)) as meal[]
+    return days
   }
 
-  const getDays = () => {
+  const getDays = async () => {
+    const { firstDay, lastDay } = getPeriod()
+    const lMenus: meal[] = await getDaysData(firstDay, lastDay)
     const nDays = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate()
     const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1)
     const firstDayIndex = firstDayOfMonth.getDay()
+
+    console.log(lMenus)
 
     const days: day[] = []
     const daysPrevMonth = firstDayIndex === 0 ? 6 : firstDayIndex - 1
@@ -50,11 +50,15 @@ export default function Calendario(props: calendario) {
 
       Array.from({ length: daysPrevMonth }, (_) => {
         const day = lastDayPrevMonth
+        const date = new Date(prevYear, prevMonth, day)
+        date.setHours(0, 0, 0, 0)
+        const menu = lMenus.find((x) => formatStringToDate(x.date)?.getTime() == date.getTime())
+
         days.push({
-          date: new Date(prevYear, prevMonth, day),
+          date: date,
           isCurrentMonth: false,
-          comida: EmptyMeal,
-          cena: EmptyMeal
+          comida: menu?.titleMeal,
+          cena: menu?.titleDinner
         })
         lastDayPrevMonth++
       })
@@ -64,15 +68,44 @@ export default function Calendario(props: calendario) {
       const day = i + 1
       const month = currentDate.getMonth() + 1
       const year = currentDate.getFullYear()
+
+      const date = new Date(`${year}-${month}-${day}`)
+      date.setHours(0, 0, 0, 0)
+      const menu = lMenus.find((x) => formatStringToDate(x.date)?.getTime() == date.getTime())
       days.push({
-        date: new Date(`${year}-${month}-${day}`),
+        date: date,
         isCurrentMonth: true,
-        comida: 'Arroz con pollo',
-        cena: 'Sopa'
+        comida: menu?.titleMeal,
+        cena: menu?.titleDinner
       })
     })
 
     setLDays(days)
+  }
+
+  const getPeriod = () => {
+    const year = currentDate.getFullYear()
+    const month = currentDate.getMonth() + 1
+
+    // Crear una fecha para el primer día del mes
+    const primerDia = new Date(year, month - 1, 1) // Los meses en JavaScript empiezan desde 0
+    const firstDayIndex = primerDia.getDay()
+    const daysPrevMonth = firstDayIndex === 0 ? 6 : firstDayIndex - 1
+    const lastDayPrevMonth =
+      new Date(currentDate.getFullYear(), currentDate.getMonth(), 0).getDate() - daysPrevMonth + 1
+
+    const firstDay = new Date(year, month - 2, lastDayPrevMonth)
+    // Obtener el mes siguiente
+    const siguienteMes = new Date(year, month, 1)
+
+    // Restar un día al siguiente mes para obtener el último día del mes anterior
+    const lastDay = new Date(siguienteMes)
+    lastDay.setDate(lastDay.getDate() - 1)
+    console.log(lastDay)
+    return {
+      firstDay,
+      lastDay
+    }
   }
 
   const nextMonth = () => {
