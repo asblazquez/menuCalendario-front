@@ -1,9 +1,9 @@
 import axios from 'axios'
 
-const baseUrl = 'http://localhost:5176/'
+const URL_API = import.meta.env.VITE_URL_API
 
 const instance = axios.create({
-  baseURL: baseUrl,
+  baseURL: URL_API,
   headers: {
     'Content-Type': 'application/json'
   }

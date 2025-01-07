@@ -7,7 +7,7 @@ export default function Card(props: day) {
   const { date, isCurrentMonth, comida, cena } = props
   return (
     <article className={`card ${isCurrentMonth ? 'current' : 'prev'}`}>
-      <h2 className="title">{`${date.getDate()}/${date.getMonth() + 1} ${EnumDaysOfWeek[date.getDay()]}`}</h2>
+      <h2 className="title">{`${EnumDaysOfWeek[date.getDay()]} ${date.getDate()}`}</h2>
       <div className="content">
         <div className="item">
           <FaSun className="icon food" />

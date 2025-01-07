@@ -4,18 +4,22 @@ import Card from './card'
 import '../../styles/calendario.scss'
 import { FaArrowAltCircleRight } from 'react-icons/fa'
 import { FaArrowAltCircleLeft } from 'react-icons/fa'
-import { MenuService } from '../../services/menuService'
+import { DayService } from '../../services/dayService'
 import { formatDateToServer, formatStringToDate } from '../../Utils/utils'
+import { selectList } from '../../interfaces/global'
+import { MenuService } from '../../services/menuService'
 
 export default function Calendario(props: calendario) {
   const { date } = props
   const [lDays, setLDays] = useState<day[]>([])
   const [currentDate, setCurrentDate] = useState(date)
   const [titelMonth, setTitelMonth] = useState('')
+  const [lMenus, setLMenus] = useState<selectList[]>([])
 
   useEffect(() => {
     getDays()
     renderTitleMonth()
+    getMenus()
   }, [currentDate])
 
   const getDaysData = async (firstDay: Date, lastDay: Date) => {
@@ -24,7 +28,7 @@ export default function Calendario(props: calendario) {
       endDate: formatDateToServer(lastDay)
     }
 
-    const days = (await MenuService.getDaysByPeriod(params)) as meal[]
+    const days = (await DayService.getDaysByPeriod(params)) as meal[]
     return days
   }
 
@@ -127,6 +131,13 @@ export default function Calendario(props: calendario) {
     titel = titel.charAt(0).toUpperCase() + titel.slice(1)
     setTitelMonth(titel)
   }
+
+  const getMenus = async () => {
+    const response = (await MenuService.getAllMenusSelectList()) as selectList[]
+    setLMenus(response)
+  }
+
+  console.log(lMenus)
 
   return (
     <>

@@ -1,0 +1,30 @@
+.logIn {
+  height: 98vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 25rem;
+    gap: 1rem;
+    border-radius: 10px;
+    border: 2px solid #25303c;
+    padding: 2rem 1rem;
+    background-color: #1c252d;
+    .row {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      width: 100%;
+      .icon {
+        font-size: 2rem;
+        color: #6789aa;
+        margin-top: -4px;
+      }
+    }
+  }
+}
