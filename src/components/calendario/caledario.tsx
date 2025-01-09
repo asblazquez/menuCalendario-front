@@ -33,6 +33,7 @@ export default function Calendario(props: calendario) {
   }
 
   const getDays = async () => {
+    console.log('reload')
     const { firstDay, lastDay } = getPeriod()
     const lMenus: meal[] = await getDaysData(firstDay, lastDay)
     const nDays = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate()
@@ -150,7 +151,7 @@ export default function Calendario(props: calendario) {
         </div>
         <section className="mainContent">
           {lDays.map((day, index) => (
-            <Card key={index} {...day} />
+            <Card key={index} {...day} lMenus={lMenus} reload={() => getDays()} />
           ))}
         </section>
         <div className="btnMonth">

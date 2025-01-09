@@ -1,3 +1,5 @@
+import { ToastOptions } from 'react-toastify'
+
 export enum EnumDaysOfWeek {
   Domingo = 0,
   Lunes = 1,
