@@ -55,12 +55,14 @@ export default function Card(props: day) {
               options={lMenus ?? []}
               id={`comida${date.getDate()}`}
               getValue={getValueMeal}
+              hasSelected
             />
             <SelectListCustom
-              label="Comida"
+              label="Cena"
               options={lMenus ?? []}
               id={`comida${date.getDate()}`}
               getValue={getValueDinner}
+              hasSelected
             />
           </>
         ) : (
