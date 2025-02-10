@@ -147,7 +147,7 @@
       .content {
         color: black;
         padding: 0.5rem 0.2rem;
-
+        max-width: 13rem;
         .item {
           display: flex;
           justify-content: space-around;
@@ -191,12 +191,6 @@
 
     .card.current {
       cursor: pointer;
-      transform: none;
-      transition: all 0.3s ease;
-      &:hover {
-        transform: scale(1.05);
-        transition: all 0.3s ease;
-      }
     }
 
     .card.prev {

@@ -15,6 +15,7 @@ export default function Calendario(props: calendario) {
   const [currentDate, setCurrentDate] = useState(date)
   const [titelMonth, setTitelMonth] = useState('')
   const [lMenus, setLMenus] = useState<selectList[]>([])
+  const [isEditMode, setIsEditMode] = useState(false)
 
   useEffect(() => {
     getDays()
@@ -33,7 +34,6 @@ export default function Calendario(props: calendario) {
   }
 
   const getDays = async () => {
-    console.log('reload')
     const { firstDay, lastDay } = getPeriod()
     const lMenus: meal[] = await getDaysData(firstDay, lastDay)
     const nDays = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate()
@@ -62,8 +62,9 @@ export default function Calendario(props: calendario) {
         days.push({
           date: date,
           isCurrentMonth: false,
-          comida: menu?.titleMeal,
-          cena: menu?.titleDinner
+          comida: { text: menu?.meal?.text, value: menu?.meal?.value } as selectList,
+          cena: { text: menu?.dinner?.text, value: menu?.dinner?.value } as selectList,
+          isEditMode: false
         })
         lastDayPrevMonth++
       })
@@ -80,8 +81,9 @@ export default function Calendario(props: calendario) {
       days.push({
         date: date,
         isCurrentMonth: true,
-        comida: menu?.titleMeal,
-        cena: menu?.titleDinner
+        comida: { text: menu?.meal?.text, value: menu?.meal?.value } as selectList,
+        cena: { text: menu?.dinner?.text, value: menu?.dinner?.value } as selectList,
+        isEditMode: false
       })
     })
 
@@ -138,11 +140,14 @@ export default function Calendario(props: calendario) {
     setLMenus(response)
   }
 
-  console.log(lMenus)
+  console.log(lDays)
 
   return (
     <>
       <h1 className="titleMonth">{titelMonth}</h1>
+      <button type="button" onClick={() => setIsEditMode(!isEditMode)}>
+        {isEditMode ? 'Cancelar' : 'Editar'}
+      </button>
       <div className="calendario">
         <div className="btnMonth">
           <button type="button" onClick={() => prevMonth()}>
@@ -151,7 +156,13 @@ export default function Calendario(props: calendario) {
         </div>
         <section className="mainContent">
           {lDays.map((day, index) => (
-            <Card key={index} {...day} lMenus={lMenus} reload={() => getDays()} />
+            <Card
+              key={index}
+              {...day}
+              lMenus={lMenus}
+              reload={() => getDays()}
+              isEditMode={isEditMode}
+            />
           ))}
         </section>
         <div className="btnMonth">

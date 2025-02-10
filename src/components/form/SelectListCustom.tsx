@@ -5,11 +5,13 @@ interface SelectListCustomProps {
   options: selectList[]
   id: string
   hasSelected: boolean
+  styles?: string
+  defaultValue?: number
   getValue: (value: string) => void
 }
 
 export default function SelectListCustom(props: SelectListCustomProps) {
-  const { label, options, id, getValue, hasSelected } = props
+  const { label, options, id, getValue, hasSelected, styles, defaultValue } = props
 
   const onChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     console.log('hola')
@@ -17,9 +19,9 @@ export default function SelectListCustom(props: SelectListCustomProps) {
   }
 
   return (
-    <div className="form-group">
+    <div className="selectList">
       <label htmlFor="select">{props.label}</label>
-      <select className="form-control" id={id} onChange={onChange}>
+      <select className={`${styles}`} id={id} onChange={onChange} defaultValue={defaultValue}>
         {hasSelected ? (
           <option value="" selected>
             -- Seleccione --

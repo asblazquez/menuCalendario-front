@@ -25,3 +25,30 @@
     }
   }
 }
+
+.selectList {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0.2rem;
+  width: 100%;
+  select {
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    font-size: 1rem;
+
+    &:focus {
+      outline: none;
+      border: 2px solid #3f5367;
+    }
+  }
+
+  .helperText {
+    font-size: 0.8rem;
+    color: #f44336;
+    margin-top: 0.2rem;
+
+    .icon {
+      font-size: 1rem;
+    }
+  }
+}

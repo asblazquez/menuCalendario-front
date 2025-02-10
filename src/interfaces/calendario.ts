@@ -7,10 +7,11 @@ export interface calendario {
 export interface day {
   date: Date
   isCurrentMonth: boolean
-  comida?: string
-  cena?: string
+  comida?: selectList
+  cena?: selectList
   lMenus?: selectList[]
   reload?: any
+  isEditMode: boolean
 }
 
 export interface paramsGetDaysByPeriod {
@@ -26,6 +27,6 @@ export interface paramsAddEditMealDay {
 export interface meal {
   id: number
   date: string
-  titleMeal: string
-  titleDinner: string
+  meal: selectList
+  dinner: selectList
 }

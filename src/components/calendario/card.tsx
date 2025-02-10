@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { day } from '../../interfaces/calendario'
 import { EnumDaysOfWeek } from '../../Utils/Constants'
 import { FaSun } from 'react-icons/fa'
@@ -9,8 +9,9 @@ import { formatDateToServer } from '../../Utils/utils'
 import { toast } from 'react-toastify'
 
 export default function Card(props: day) {
-  const { date, isCurrentMonth, comida, cena, lMenus, reload } = props
+  const { date, isCurrentMonth, comida, cena, lMenus, reload, isEditMode } = props
   const [isHovered, setIsHovered] = useState(false)
+  console.log(comida)
 
   const getValue = async (value: string, isMeal: boolean) => {
     console.log('hola2')
@@ -41,6 +42,8 @@ export default function Card(props: day) {
     getValue(value, false)
   }
 
+  console.log(comida)
+
   return (
     <article
       className={`card ${isCurrentMonth ? 'current' : 'prev'}`}
@@ -48,7 +51,7 @@ export default function Card(props: day) {
       onMouseLeave={() => setIsHovered(false)}>
       <h2 className="title">{`${EnumDaysOfWeek[date.getDay()]} ${date.getDate()}`}</h2>
       <div className="content">
-        {isHovered ? (
+        {isHovered && isEditMode ? (
           <>
             <SelectListCustom
               label="Comida"
@@ -56,6 +59,7 @@ export default function Card(props: day) {
               id={`comida${date.getDate()}`}
               getValue={getValueMeal}
               hasSelected
+              defaultValue={comida?.value}
             />
             <SelectListCustom
               label="Cena"
@@ -63,17 +67,18 @@ export default function Card(props: day) {
               id={`comida${date.getDate()}`}
               getValue={getValueDinner}
               hasSelected
+              defaultValue={cena?.value}
             />
           </>
         ) : (
           <>
             <div className="item">
               <FaSun className="icon food" />
-              <p>{comida}</p>
+              <p>{comida?.text}</p>
             </div>
             <div className="item">
               <FaMoon className="icon dinner" />
-              <p>{cena}</p>
+              <p>{cena?.text}</p>
             </div>
           </>
         )}
